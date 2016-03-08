@@ -143,14 +143,14 @@ configurations assures a better result (minor empty spaces), while less configur
 
 ### The callback function
 
-Let's see the argument it receives. If the option `get_all_configurations` is set to true than it receives an array of configuration objects, otherwise it receives only the optimized configuration object.
+Let's see the argument it receives. If the option `get_all_configurations` is set to true, then it receives an array of configuration objects, otherwise it receives only the optimized configuration object.
 
 The configuration object has the following properties:
 
 - __criteria__: the criteria used for this configuration, i.e `['Up', 'Down']`
 - __id__: the configuration id (the key of the criteria)
 - __empty__: the number of empty grid units which the configuration leaves in the container area (the minor it is, the better the result should be)
-- __elements__: array of jqeury elements representing the tiles. Each element has some extra properties:
+- __elements__: array of jQuery elements representing the tiles. Each element has some extra properties:
     - __item__: the original item object it represents
     - __x0__: the x coordinate of the left side of the tile in the grid unit system (explained below)
     - __x1__: the x coordinate of the right side of the tile in the grid unit system
