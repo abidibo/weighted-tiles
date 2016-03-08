@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Weighted Tiles</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300' rel='stylesheet' type='text/css'>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="weighted-tiles.js"></script>
+        <style type="text/css">
+            * {
+                box-sizing: border-box;
+            }
+            #performance {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+            }
+            #canvas {
+                margin: auto;
+                position: relative;
+                width: 780px;
+                height: 460px;
+                border: 1px solid #000;
+            }
+            .tile {
+                color: #fff;
+                padding: 10px;
+                font-family: 'Roboto Condensed', sans-serif;
+            }
+            .tile .fa {
+                position: absolute; bottom: 10px;right: 10px;
+                font-size: 3.5rem;
+            }
+            .tile:hover {
+                transform: scale(1.2);
+                z-index: 100;
+            }
+            .id1 {
+                background: #1f7acd;
+            }
+            .id2 {
+                background: #a7c13a;
+            }
+            .id3 {
+                background: #45aedd;
+            }
+            .id4 {
+                background: #da2ea6;
+            }
+            .id5 {
+                background: #3d8255;
+            }
+            .id6 {
+                background: #eb4f27;
+            }
+            .id7 {
+                background: #ef114c;
+            }
+            .id8 {
+                background: #9a50cd;
+            }
+            .w9 {
+                font-size: 38px;
+                font-weight: 700;
+            }
+            .w6 {
+                font-size: 24px;
+                font-weight: 400;
+            }
+            .w3 {
+                font-size: 18px;
+                font-weight: 400;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>FTW</h1>
+        <div id="canvas"></div>
+        <div id="performance"></div>
+        <div id="configuration"></div>
+        <script type="text/javascript">
+            var now = new Date().getTime();
+            var items = [
+                { weight: 9, id: 1, title: 'Tour di Avigliana Esplosiva', icon: 'fa-bus' },
+                { weight: 6, id: 2, title: 'Sentieri sonori in Alta Valle di Susa' },
+                { weight: 6, id: 3, title: 'Estate ragazzi a Sestriere' },
+                { weight: 6, id: 4, title: 'Scuola di narrazione ad Avigliana' },
+                { weight: 3, id: 5, title: 'Juventus Summer Camp' },
+                { weight: 3, id: 6, title: 'Settimane di atletica' },
+                { weight: 3, id: 7, title: 'Apertura telecabina a Sestriere' },
+                { weight: 9, id: 8, title: 'Oulx Lab', icon: 'fa-flask' },
+            ];
+
+            var callback = function(obj) {
+                obj.elements.forEach(function(el) {
+                    var html = "<div>" + el.item.title + '</div>';
+                    if(el.item.icon) {
+                        html += '<i class="fa ' + el.item.icon + '"></i>';
+                    }
+                    el.html(html).appendTo($('#canvas'));
+                });
+                // use this when get_all_configurations is true
+                /*var conf_div = $('<div/>', {id: 'configuration'}).css({
+                    position: 'absolute',
+                    top: 0,
+                    right: 0
+                }).appendTo($('body'));
+                obj.forEach(function(conf, index) {
+                    setTimeout(function() {
+                        $('#canvas').empty();
+                        conf_div.html(conf.criteria.toString() + '<br />' + 'empty: ' + conf.empty);
+                        conf.elements.forEach(function(el) {
+                            var html = "<div>" + el.item.title + '</div>';
+                            if(el.item.icon) {
+                                html += '<i class="fa ' + el.item.icon + '"></i>';
+                            }
+                            el.html(html).appendTo($('#canvas'));
+                        });
+                    }, index * 5000);
+                });*/
+            }
+
+            var weighted_tiles = new WeightedTiles(items, 780, 460, { 
+                max_ratio: 2, 
+                log_verbosity: 4, 
+                get_all_configurations: false,
+                criteria: {
+                    0: ['Up', 'Down'],
+                    1: ['Down', 'Up'],
+                    2: ['UpPosition', 'DownPosition'],
+                    3: ['DownPosition', 'UpPosition'],
+                    4: ['Up', 'DownPosition'],
+                    5: ['Down', 'UpPosition']
+                },
+                max_attempts: 10000,
+                callback: callback
+            });
+            var end = new Date().getTime();
+            $('#performance').html('Elapsed time: ' + (end-now)/1000 + 's');
+
+        </script>
+    </body>
+</html>
