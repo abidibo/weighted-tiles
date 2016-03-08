@@ -35,9 +35,9 @@ var WeightedTiles;
     WeightedTiles = function(items, w, h, options) {
 
         var opts = {
-            max_ratio: 3,
-            log_verbosity: 5,
-            get_all_configurations: true,
+            max_ratio: 2,
+            log_verbosity: 0,
+            get_all_configurations: false,
             criteria: {
                 0: ['Up', 'Down'],
                 1: ['Down', 'Up'],
@@ -261,13 +261,12 @@ var WeightedTiles;
             }
 
             // dom element
-            var el = $('<div/>').addClass(this._options.item_el_tile_class + ' ' + this._options.item_el_weight_class + item.weight).css({
+            var el = $('<div/>').addClass(this._options.item_el_tile_class + ' ' + this._options.item_el_weight_class + item.weight + ' id' + item.id).css({
                 position: 'absolute',
                 left: (this._position[0] * this._grid_side) + 'px',
                 top: (this._position[1] * this._grid_side) + 'px',
                 width: (w_units * this._grid_side) + 'px',
-                height: (h_units * this._grid_side) + 'px',
-                background: this.getRandomColor()
+                height: (h_units * this._grid_side) + 'px'
             }).html(item.weight + ' - ' + item.id);
             // add extra properties to el
             el.item = item;
@@ -538,16 +537,16 @@ var WeightedTiles;
                 top: 0,
                 right: 0
             }).appendTo($('body'));
+            var self = this;
             if(this._options.get_all_configurations) {
-                var self = this;
 
                 this._ordered_conf.forEach(function(conf, index) {
                     setTimeout(function() {
                         $(canvas).empty();
                         conf_div.html(conf.criteria.toString() + '<br />' + 'empty: ' + conf.empty);
                         conf.elements.forEach(function(el) {
-                            el.appendTo($(canvas));
-                        })
+                            el.css('background', self.getRandomColor()).appendTo($(canvas));
+                        });
                     }, index * 5000);
                 });
             }
@@ -555,7 +554,7 @@ var WeightedTiles;
                 var conf = this._ordered_conf[this._ordered_conf.length - 1];
                 conf.elements.forEach(function(el) {
                     conf_div.html(conf.criteria.toString() + '<br>' + 'empty: ' + conf.empty);
-                    el.appendTo($(canvas));
+                    el.css('background', self.getRandomColor()).appendTo($(canvas));
                 });
             }
         };
