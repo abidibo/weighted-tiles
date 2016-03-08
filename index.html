@@ -49,8 +49,9 @@
 
             var callback = function(obj) {
                 //this.display('#canvas');
+                var self = this;
                 obj.elements.forEach(function(el) {
-                    el.appendTo($('#canvas'));
+                    el.css('background', self.getRandomColor()).appendTo($('#canvas'));
                 });
             }
 

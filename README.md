@@ -203,6 +203,17 @@ Just call it giving the container element, as a jQuery selector, i.e. inside the
 
 Sit down, and watch.
 
+## The getRandomColor method
+
+This is just an utility, if you need to visualize different tiles with colors to see the result, but you're too lazy to write your own css classes, you can use this method to pick up a random color, i.e. inside the callback function:
+
+    var callback = function(obj) {
+        var self = this;
+        obj.elements.forEach(function(el) {
+            el.css('background', self.getRandomColor()).appendTo($('#canvas'));
+        });
+    }
+
 ## TODO
 
 - improve the performance (I still don't know how exactly, but surely the collision function or the 'get the starting position' functions can be improved)

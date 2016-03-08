@@ -180,7 +180,7 @@ var WeightedTiles;
             this._initConfiguration(id);
             // loop to place the items
             for (var i = 0, len = this._ordered_items.length; i < len; i++) {
-                this.placeItem(this._ordered_items[i], i);
+                this._placeItem(this._ordered_items[i], i);
             }
             // how much space was left empty by the configuration?
             var empty = 0;
@@ -216,7 +216,7 @@ var WeightedTiles;
          * @param {Object} item the item to place
          * @param {Number} index the item index
          */
-        this.placeItem = function(item, index) {
+        this._placeItem = function(item, index) {
 
             // gets the first free position coordinates
             this._position = this._getPosition();
@@ -240,6 +240,7 @@ var WeightedTiles;
             }
 
             var criteria = this._options.criteria[this._configuration_id];
+            var should_change_position = this._shouldChangePosition(criteria);
             while(cnt < this._options.max_attempts && collision === true) {
                 for(var i = 0, l = 2; i < l; i++) {
                     var r = this['change' + criteria[i]](factors, item_units);
@@ -250,7 +251,7 @@ var WeightedTiles;
                         break;
                     }
                 }
-                if(collision && (this._configuration_id == 0 || this._configuration_id == 1)) {
+                if(collision && should_change_position) {
                     this._position = (this._position[0] + 1) > this._grid_cols ? [0, this._position[1] + 1] : [this._position[0] + 1, this._position[1]];
                 }
                 cnt++;
@@ -283,6 +284,22 @@ var WeightedTiles;
                 }
             }
 
+        };
+
+        /**
+         * Should the starting position change?
+         * Yes if there is a non-position criteria attempt, otherwise the position
+         * is already changed inside the criteria function
+         * @param {Array} criteria
+         * @return boolean
+         */
+        this._shouldChangePosition = function(criteria) {
+            if(/Position/.test(criteria[0]) && /Position/.test(criteria[1])) {
+                console.log('NOT CHANGED!!!!!');
+                return false;
+            }
+            console.log('CHANGED!!!!!');
+            return true;
         };
 
         /**
