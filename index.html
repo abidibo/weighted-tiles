@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Weighted tiled</title>
+        <meta charset="utf-8" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="weighted-tiles.js"></script>
+        <style type="text/css">
+            * {
+                box-sizing: content-box;
+            }
+            #performance {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+            }
+            #canvas {
+                position: relative;
+                width: 900px;
+                height: 900px;
+                border: 1px solid #000;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>FTW</h1>
+        <div id="canvas"></div>
+        <div id="performance"></div>
+        <div id="configuration"></div>
+        <script type="text/javascript">
+            var now = new Date().getTime();
+            var items = [
+                { weight: 3, id: 1 },
+                { weight: 9, id: 2 },
+                { weight: 6, id: 3 },
+                { weight: 3, id: 4 },
+                { weight: 3, id: 5 },
+                { weight: 3, id: 6 },
+                { weight: 9, id: 7 },
+                { weight: 6, id: 8 },
+                { weight: 3, id: 9 },
+                { weight: 3, id: 10 },
+                { weight: 3, id: 11 },
+                { weight: 3, id: 12 },
+                { weight: 6, id: 13 },
+                { weight: 3, id: 14 },
+
+            ];
+
+            var callback = function(obj) {
+                //this.display('#canvas');
+                obj.elements.forEach(function(el) {
+                    el.appendTo($('#canvas'));
+                });
+            }
+
+            var weighted_tiles = new WeightedTiles(items, 900, 900, { 
+                max_ratio: 2, 
+                log_verbosity: 4, 
+                get_all_configurations: false,
+                criteria: {
+                    0: ['Up', 'Down'],
+                    1: ['Down', 'Up'],
+                    2: ['UpPosition', 'DownPosition'],
+                    3: ['DownPosition', 'UpPosition'],
+                    4: ['Up', 'DownPosition'],
+                    5: ['Down', 'UpPosition']
+                },
+                max_attempts: 10000,
+                callback: callback
+            });
+            var end = new Date().getTime();
+            $('#performance').html('Elapsed time: ' + (end-now)/1000 + 's');
+
+        </script>
+    </body>
+</html>
