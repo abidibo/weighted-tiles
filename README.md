@@ -190,6 +190,19 @@ If it doesn't succeed, after the paired criteria attempt, the initial position i
 
 As above, but this time, for every shape, all the available starting positions are tried. So a shape is tested in all position before passing to the next one.
 
+## The display method
+
+The library comes with a display method for testing purposes. You can see it in action in the [first demo](http://codepen.io/abidibo/pen/yOYVPr).
+It is nice when the __get_all_configurations__ option is enabled, because it displays each tried configuration (using an increasing optimization order) for 5 seconds, giving also the information of the empty grid units in the container area.
+Just call it giving the container element, as a jQuery selector, i.e. inside the callback function:
+
+    function callback(arg) {
+        // the context is set to the WeightedTiles instance
+        this.display('#canvas');
+    }
+
+Sit down, and watch.
+
 ## TODO
 
 - improve the performance (I still don't know how exactly, but surely the collision function or the 'get the starting position' functions can be improved)
