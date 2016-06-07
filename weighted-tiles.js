@@ -11,6 +11,7 @@ var WeightedTiles;
      * @param {Number} h area height
      * @param {Object} options
      * @param {Number} options.max_ratio maximum ratio allowed h/w for a tile. Default 3.
+     * @param {Number} options.y_tolerance percentage of tolerance in the y direction. Increase if tiles reach overflow. Default 0.2.
      * @param {Number} options.log_verbosity console log verbosity. It influences a lot the performance, set to 0 in production. Also do not set to 5 with more than 
      *                                       one criteria because it is overkilling!
      * @param {Boolean} options.get_all_configurations Whether to receive all the configurations or only the one which optimizes left empty space
@@ -36,6 +37,7 @@ var WeightedTiles;
 
         var opts = {
             max_ratio: 2,
+            y_tolerance: 0.2,
             log_verbosity: 0,
             get_all_configurations: false,
             criteria: {
@@ -127,8 +129,8 @@ var WeightedTiles;
             var ratio = 1;
             var go = true;
             var num = this._weight_sum;
-            // ratio used to limit cycles and prevent infinite loop, a result actually should be found within 10 loops
-            while(go && ratio < 10) {
+            // ratio used to limit cycles and prevent infinite loop, a result actually should be found within 50 loops
+            while(go && ratio < 50) {
                 try {
 
                     this.log(4, 'unit weight ratio: ', ratio);
@@ -147,7 +149,7 @@ var WeightedTiles;
                         throw "unit weight grid h overflow";
                     }
 
-                    this.log(4, 'grid found');
+                    this.log(2, 'grid found');
                     this.log(4, 'covered_area: ', num * side * side);
                     this.log(4, 'grid unit side: ', side, ' - ratio: ', ratio);
                     this.log(4, 'grid units: ', num);
@@ -259,6 +261,10 @@ var WeightedTiles;
 
             if(collision) {
                 this.log(2, 'placed overflow detected, no position found for item: ', item.id);
+                this.log(2, 'placing at top left with grid cols number width');
+                this._position = [0, 0];
+                w_units = this._grid_cols;
+                h_units = item_units / w_units;
             }
 
             // dom element
@@ -295,10 +301,8 @@ var WeightedTiles;
          */
         this._shouldChangePosition = function(criteria) {
             if(/Position/.test(criteria[0]) && /Position/.test(criteria[1])) {
-                console.log('NOT CHANGED!!!!!');
                 return false;
             }
-            console.log('CHANGED!!!!!');
             return true;
         };
 
@@ -471,7 +475,7 @@ var WeightedTiles;
                 if(log) this.log(5, 'w_units: ', w,  ' overflow x detected', x0, y0, w, h);
                 return true;
             }
-            if(y1 > this._grid_rows + (this._grid_rows * 0.2)) {
+            if(y1 > this._grid_rows + (this._grid_rows * this._options.y_tolerance)) {
                 if(log) this.log(5, 'w_units: ', w,  ' overflow y detected', x0, y0, w, h);
                 return true;
             }
